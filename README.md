@@ -1,0 +1,1 @@
+# fastify-prisma-rest-api
