@@ -1,11 +1,36 @@
-import Fastify from "fastify";
+import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import { AddressInfo } from "net";
 import userRoutes from "./modules/user/user.route";
 import { userSchemas } from "./modules/user/user.schema";
+import fastifyJwt from "@fastify/jwt";
 
-const server = Fastify();
+export const server = Fastify();
 
-server.get("/healthcheck", async () => {
+declare module "fastify" {
+  interface FastifyInstance {
+    authenticate: (
+      request: FastifyRequest,
+      reply: FastifyReply
+    ) => Promise<void>;
+  }
+}
+
+server.register(fastifyJwt, {
+  secret: "supersecret",
+});
+
+server.decorate(
+  "authenticate",
+  async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      await request.jwtVerify();
+    } catch (error) {
+      return reply.send(error);
+    }
+  }
+);
+
+server.get("/api/healthcheck", async () => {
   return { status: "OK" };
 });
 
@@ -13,7 +38,8 @@ async function main() {
   for (const schema of userSchemas) {
     server.addSchema(schema);
   }
-  server.register(userRoutes, { prefix: "api/user" });
+
+  server.register(userRoutes, { prefix: "/api/user" });
 
   try {
     await server.listen({
