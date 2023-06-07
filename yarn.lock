@@ -72,6 +72,17 @@
   dependencies:
     fast-json-stringify "^5.7.0"
 
+"@fastify/jwt@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@fastify/jwt/-/jwt-7.0.0.tgz#b3ebfb762bcc59b98fd595ed94900262454b03cf"
+  integrity sha512-y8n7qhBb/U+qWRUJzjZ+SJckv9wmOrA1eC/lM34SnOopt7VlK3hdfox7T3iuurAWVb8HjS9GxmZx+zFZO+Vb5A==
+  dependencies:
+    "@fastify/error" "^3.0.0"
+    "@lukeed/ms" "^2.0.0"
+    fast-jwt "^3.0.0"
+    fastify-plugin "^4.0.0"
+    steed "^1.1.3"
+
 "@fastify/send@^2.0.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@fastify/send/-/send-2.1.0.tgz#1aa269ccb4b0940a2dadd1f844443b15d8224ea0"
@@ -421,7 +432,7 @@ array-union@^2.1.0:
   resolved "https://registry.yarnpkg.com/array-union/-/array-union-2.1.0.tgz#b798420adbeb1de828d84acd8a2e23d3efe85e8d"
   integrity sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==
 
-asn1.js@^5.3.0:
+asn1.js@^5.4.1:
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/asn1.js/-/asn1.js-5.4.1.tgz#11a980b84ebb91781ce35b0fdc2ee294e3783f07"
   integrity sha512-+I//4cYPccV8LdmBLiX8CYvf9Sp3vQsrqu2QNXRcrbiWvcx/UdlFiqUJJzxRQxgsZmvhXhn4cSKeSmoFjVdupA==
@@ -877,14 +888,14 @@ fast-json-stringify@^5.7.0:
     fast-uri "^2.1.0"
     rfdc "^1.2.0"
 
-fast-jwt@^1.4.0:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/fast-jwt/-/fast-jwt-1.7.2.tgz#23b4911adc814464c9b6e64a5f9f60b608e6be8e"
-  integrity sha512-OEInypGXJhtURzq9GbFM5KaALUu9+4IV3kJEbWPuqOBN5JBe7A51Tx0CaQYHGC9GNfZnr5npA0lCIMaWiZmz/A==
+fast-jwt@^3.0.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/fast-jwt/-/fast-jwt-3.1.0.tgz#3d835181bddeb9764989b0d9f839d51017ddb4a7"
+  integrity sha512-3xTjNdKul+YJMuknYrxiJfXL9Qg4TuqQu0SSPSCs89XikJWgnD4Zey5YREWOsnjB2R042SkJsDt1dE1AZ5XwgA==
   dependencies:
-    asn1.js "^5.3.0"
+    asn1.js "^5.4.1"
     ecdsa-sig-formatter "^1.0.11"
-    mnemonist "^0.39.0"
+    mnemonist "^0.39.5"
 
 fast-levenshtein@^2.0.6:
   version "2.0.6"
@@ -914,25 +925,6 @@ fastfall@^1.5.0:
   integrity sha512-KH6p+Z8AKPXnmA7+Iz2Lh8ARCMr+8WNPVludm1LGkZoD2MjY6LVnRMtTKhkdzI+jr0RzQWXKzKyBJm1zoHEL4Q==
   dependencies:
     reusify "^1.0.0"
-
-"fastify-jwt-deprecated@npm:fastify-jwt@4.1.3":
-  version "4.1.3"
-  resolved "https://registry.yarnpkg.com/fastify-jwt/-/fastify-jwt-4.1.3.tgz#38fedba78193b8485e970fdf821426d7bbeaec0b"
-  integrity sha512-SmcXjwgO6x8Kw4ybiZHOhk2Sp5MCvA/qWI3aXZPXrICWi1z6bQBSXJw8PiyiiGt84w/YcikpgntkWZiEP04EEg==
-  dependencies:
-    "@lukeed/ms" "^2.0.0"
-    fast-jwt "^1.4.0"
-    fastify-plugin "^3.0.0"
-    http-errors "^2.0.0"
-    steed "^1.1.3"
-
-fastify-jwt@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/fastify-jwt/-/fastify-jwt-4.2.0.tgz#c67c3c938a8c442dd6e2720e73dac1fd810fdd2c"
-  integrity sha512-wS0Wvg+5/7ZGaOJVFFIIWoMyc1Ashq9zUuVzq757R36fvXtsrEnEAaEIVFImAsDrAUIr9+PnrthMSGdVZgDk/g==
-  dependencies:
-    fastify-jwt-deprecated "npm:fastify-jwt@4.1.3"
-    process-warning "^1.0.0"
 
 fastify-plugin@^3.0.0:
   version "3.0.1"
@@ -1211,7 +1203,7 @@ http-errors@1.8.1:
     statuses ">= 1.5.0 < 2"
     toidentifier "1.0.1"
 
-http-errors@2.0.0, http-errors@^2.0.0:
+http-errors@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-2.0.0.tgz#b7774a1486ef73cf7667ac9ae0858c012c57b9d3"
   integrity sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==
@@ -1444,7 +1436,7 @@ mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-mnemonist@^0.39.0:
+mnemonist@^0.39.5:
   version "0.39.5"
   resolved "https://registry.yarnpkg.com/mnemonist/-/mnemonist-0.39.5.tgz#5850d9b30d1b2bc57cc8787e5caa40f6c3420477"
   integrity sha512-FPUtkhtJ0efmEFGpU14x7jGbTB+s18LrzRL2KgoWz9YvcY3cPomz8tih01GbHwnGk/OmkOKfqd/RAQoc8Lm7DQ==
