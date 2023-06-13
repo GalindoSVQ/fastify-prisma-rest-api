@@ -3,6 +3,8 @@ import { AddressInfo } from "net";
 import userRoutes from "./modules/user/user.route";
 import { userSchemas } from "./modules/user/user.schema";
 import fastifyJwt from "@fastify/jwt";
+import { groupSchemas } from "./modules/group/group.schema";
+import groupRoutes from "./modules/group/group.route";
 
 export const server = Fastify();
 
@@ -12,6 +14,15 @@ declare module "fastify" {
       request: FastifyRequest,
       reply: FastifyReply
     ) => Promise<void>;
+  }
+}
+
+declare module "@fastify/jwt" {
+  interface FastifyJWT {
+    user: {
+      uuid: string;
+      email: string;
+    };
   }
 }
 
@@ -35,11 +46,12 @@ server.get("/api/healthcheck", async () => {
 });
 
 async function main() {
-  for (const schema of userSchemas) {
+  for (const schema of [...userSchemas, ...groupSchemas]) {
     server.addSchema(schema);
   }
 
   server.register(userRoutes, { prefix: "/api/user" });
+  server.register(groupRoutes, { prefix: "/api/group" });
 
   try {
     await server.listen({
