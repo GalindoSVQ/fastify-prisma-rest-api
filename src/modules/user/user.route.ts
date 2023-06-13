@@ -4,16 +4,16 @@ import {
   loginHandler,
   getUserHandler,
 } from "./user.controller";
-import { $ref } from "./user.schema";
+import { $userRef } from "./user.schema";
 
 async function userRoutes(server: FastifyInstance) {
   server.post(
     "/",
     {
       schema: {
-        body: $ref("createUser"),
+        body: $userRef("createUser"),
         response: {
-          201: $ref("createUserResponse"),
+          201: $userRef("createUserResponse"),
         },
       },
     },
@@ -24,9 +24,9 @@ async function userRoutes(server: FastifyInstance) {
     "/login",
     {
       schema: {
-        body: $ref("loginSchema"),
+        body: $userRef("loginSchema"),
         response: {
-          200: $ref("loginResponseSchema"),
+          200: $userRef("loginResponseSchema"),
         },
       },
     },
@@ -40,7 +40,7 @@ async function userRoutes(server: FastifyInstance) {
         response: {
           200: {
             type: "array",
-            items: $ref("createUserResponse"),
+            items: $userRef("createUserResponse"),
           },
         },
       },
