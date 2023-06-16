@@ -2,19 +2,13 @@ import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
 
 const userCoreSchema = {
-  name: z
+  username: z
     .string({
       required_error: "Name is required",
       invalid_type_error: "Name must be a string",
     })
     .min(2)
     .max(255),
-  email: z
-    .string({
-      required_error: "Email is required",
-      invalid_type_error: "Email must be a string",
-    })
-    .email(),
 };
 
 const createUserSchema = z.object({
@@ -31,9 +25,8 @@ const createUserSchema = z.object({
 
 const createUserResponseSchema = z.object({
   uuid: z.string(),
-  name: userCoreSchema.name,
-  lastName: z.string().min(2).max(255).optional(),
-  email: userCoreSchema.email,
+  username: userCoreSchema.username,
+  groupUuid: z.string(),
 });
 
 const getAllUsersSchema = z.object({
@@ -42,17 +35,19 @@ const getAllUsersSchema = z.object({
 });
 
 const loginSchema = z.object({
-  email: z
-    .string({
-      required_error: "Email is required",
-      invalid_type_error: "Email must be a string",
-    })
-    .email(),
+  username: z.string({
+    required_error: "Username is required",
+    invalid_type_error: "Username must be a string",
+  }),
   password: z.string().min(6).max(255),
 });
 
 const loginResponseSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
   token: z.string(),
+  username: z.string(),
+  uuid: z.string(),
 });
 
 export type CreateUserSchema = z.infer<typeof createUserSchema>;

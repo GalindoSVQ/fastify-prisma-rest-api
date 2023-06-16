@@ -3,12 +3,13 @@ import prisma from "../../utils/prisma";
 import { CreateUserSchema } from "./user.schema";
 
 export async function createUser(userData: CreateUserSchema) {
-  const { password, ...rest } = userData;
+  const { password, username } = userData;
   const { salt, hash } = hashPassword(password);
 
   const user = await prisma.user.create({
     data: {
-      ...rest,
+      username,
+      firstName: username,
       password: hash,
       salt,
     },
@@ -17,10 +18,10 @@ export async function createUser(userData: CreateUserSchema) {
   return user;
 }
 
-export async function findUserByEmail(email: string) {
+export async function findUserByUsername(username: string) {
   const user = await prisma.user.findUnique({
     where: {
-      email,
+      username,
     },
   });
 

@@ -2,18 +2,26 @@ import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import { AddressInfo } from "net";
 import userRoutes from "./modules/user/user.route";
 import { userSchemas } from "./modules/user/user.schema";
-import fastifyJwt from "@fastify/jwt";
+import fastifyJwt, { JWT } from "@fastify/jwt";
 import { groupSchemas } from "./modules/group/group.schema";
 import groupRoutes from "./modules/group/group.route";
+import expenseRoutes from "./modules/expense/expense.route";
+import { expenseSchemas } from "./modules/expense/expense.schema";
+import cors from "@fastify/cors";
 
 export const server = Fastify();
 
+server.register(cors, {
+  origin: "*",
+});
+
 declare module "fastify" {
-  interface FastifyInstance {
-    authenticate: (
-      request: FastifyRequest,
-      reply: FastifyReply
-    ) => Promise<void>;
+  interface FastifyRequest {
+    jwt: JWT;
+  }
+  export interface FastifyInstance {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    authenticate: any;
   }
 }
 
@@ -21,13 +29,16 @@ declare module "@fastify/jwt" {
   interface FastifyJWT {
     user: {
       uuid: string;
-      email: string;
+      username: string;
+      firstName: string;
+      lastName: string;
+      iat: number;
     };
   }
 }
 
 server.register(fastifyJwt, {
-  secret: "supersecret",
+  secret: "ndkandnan78duy9sau87dbndsa89u7dsy789adb",
 });
 
 server.decorate(
@@ -46,12 +57,13 @@ server.get("/api/healthcheck", async () => {
 });
 
 async function main() {
-  for (const schema of [...userSchemas, ...groupSchemas]) {
+  for (const schema of [...userSchemas, ...groupSchemas, ...expenseSchemas]) {
     server.addSchema(schema);
   }
 
   server.register(userRoutes, { prefix: "/api/user" });
   server.register(groupRoutes, { prefix: "/api/group" });
+  server.register(expenseRoutes, { prefix: "/api/expense" });
 
   try {
     await server.listen({

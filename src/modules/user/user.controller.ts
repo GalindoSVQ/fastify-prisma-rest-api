@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { createUser, findUserByEmail, findUsers } from "./user.service";
+import { createUser, findUserByUsername, findUsers } from "./user.service";
 import { CreateUserSchema, LoginInput } from "./user.schema";
 import { server } from "../../app";
 import { verifyPassword } from "../../utils/hash";
@@ -8,7 +8,7 @@ export async function regiterUserHandler(
   request: FastifyRequest<{ Body: CreateUserSchema }>,
   reply: FastifyReply
 ) {
-  const body = request.body;
+  const { body } = request;
 
   try {
     const user = await createUser(body);
@@ -28,10 +28,10 @@ export async function loginHandler(
 ) {
   const body = request.body;
 
-  const user = await findUserByEmail(body.email);
+  const user = await findUserByUsername(body.username);
 
   if (!user) {
-    return reply.code(401).send({ message: "Invalid email or password" });
+    return reply.code(401).send({ message: "Invalid username or password" });
   }
 
   const correctPassword = verifyPassword({
@@ -44,10 +44,16 @@ export async function loginHandler(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, salt, ...rest } = user;
 
-    return { token: server.jwt.sign(rest) };
+    return {
+      uuid: user.uuid,
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      token: server.jwt.sign(rest),
+    };
   }
 
-  return reply.code(401).send({ message: "Invalid email or password" });
+  return reply.code(401).send({ message: "Invalid username or password" });
 }
 
 export async function getUserHandler() {
