@@ -8,6 +8,8 @@ import groupRoutes from "./modules/group/group.route";
 import expenseRoutes from "./modules/expense/expense.route";
 import { expenseSchemas } from "./modules/expense/expense.schema";
 import cors from "@fastify/cors";
+import { expensesOnUsersSchemas } from "./modules/expensesOnUsers/expensesOnUsers.schema";
+import expensesOnUsersRoutes from "./modules/expensesOnUsers/expensesOnUsers.route";
 
 export const server = Fastify();
 
@@ -57,13 +59,19 @@ server.get("/api/healthcheck", async () => {
 });
 
 async function main() {
-  for (const schema of [...userSchemas, ...groupSchemas, ...expenseSchemas]) {
+  for (const schema of [
+    ...userSchemas,
+    ...groupSchemas,
+    ...expenseSchemas,
+    ...expensesOnUsersSchemas,
+  ]) {
     server.addSchema(schema);
   }
 
   server.register(userRoutes, { prefix: "/api/user" });
   server.register(groupRoutes, { prefix: "/api/group" });
   server.register(expenseRoutes, { prefix: "/api/expense" });
+  server.register(expensesOnUsersRoutes, { prefix: "/api/expenses-users" });
 
   try {
     await server.listen({

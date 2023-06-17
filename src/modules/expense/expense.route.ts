@@ -4,6 +4,8 @@ import {
   createExpenseHandler,
   deleteExpenseHandler,
   getAllExpensesFromGroupHandler,
+  getExpenseHandler,
+  updateExpenseHandler,
 } from "./expense.controller";
 import { $groupRef } from "../group/group.schema";
 
@@ -39,7 +41,21 @@ async function expenseRoutes(server: FastifyInstance) {
   );
 
   server.get(
-    "/:groupUuid",
+    "/:expenseUuid",
+    {
+      preHandler: [server.authenticate],
+      schema: {
+        params: $expenseRef("expenseUuidParamSchema"),
+        response: {
+          200: $expenseRef("retrieveExpenseResponseSchema"),
+        },
+      },
+    },
+    getExpenseHandler
+  );
+
+  server.get(
+    "/group/:groupUuid",
     {
       preHandler: [server.authenticate],
       schema: {
@@ -50,6 +66,21 @@ async function expenseRoutes(server: FastifyInstance) {
       },
     },
     getAllExpensesFromGroupHandler
+  );
+
+  server.put(
+    "/:expenseUuid",
+    {
+      preHandler: [server.authenticate],
+      schema: {
+        params: $expenseRef("expenseUuidParamSchema"),
+        body: $expenseRef("updateExpenseSchema"),
+        response: {
+          200: $expenseRef("createExpenseResponseSchema"),
+        },
+      },
+    },
+    updateExpenseHandler
   );
 }
 

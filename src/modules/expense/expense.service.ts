@@ -1,6 +1,6 @@
 import prisma from "../../utils/prisma";
-import { CreateExpenseInput } from "./expense.schema";
-import { Category } from "@prisma/client";
+import { CreateExpenseInput, UpdateExpenseInput } from "./expense.schema";
+import { Category, Status } from "@prisma/client";
 
 export async function createExpense(
   expenseData: CreateExpenseInput & { authorUuid: string }
@@ -26,6 +26,30 @@ export async function getExpensesFromGroup(groupUuid: string) {
 }
 export async function deleteExpense(expenseUuid: string) {
   await prisma.expense.delete({
+    where: {
+      uuid: expenseUuid,
+    },
+  });
+}
+
+export async function updateExpense(
+  expenseUuid: string,
+  expenseData: UpdateExpenseInput
+) {
+  return await prisma.expense.update({
+    where: {
+      uuid: expenseUuid,
+    },
+    data: {
+      ...expenseData,
+      category: expenseData.category as Category,
+      status: expenseData.status as Status,
+    },
+  });
+}
+
+export async function getExpense(expenseUuid: string) {
+  return await prisma.expense.findUnique({
     where: {
       uuid: expenseUuid,
     },

@@ -24,9 +24,31 @@ const createExpenseResponseSchema = z.object({
   groupUuid: z.string().min(2).max(255),
 });
 
+const retrieveExpenseResponseSchema = z.object({
+  ...createExpenseResponseSchema.shape,
+  authorUuid: z.string().min(2).max(255),
+  status: z.string().min(2).max(255),
+  sharedWith: z.array(
+    z.object({
+      uuid: z.string().min(2).max(255),
+      username: z.string().min(2).max(255),
+    })
+  ),
+});
+
+const updateExpenseSchema = z.object({
+  title: z.string().min(2).max(255),
+  amount: z.number().min(0),
+  date: z.string().min(2).max(255),
+  category: z.string().min(2).max(255),
+  description: z.string().min(2).max(255),
+  status: z.string().min(2).max(255),
+});
+
 const getAllExpensesSchema = z.array(createExpenseResponseSchema);
 
 export type CreateExpenseInput = z.infer<typeof createExpenseSchema>;
+export type UpdateExpenseInput = z.infer<typeof updateExpenseSchema>;
 
 export const { schemas: expenseSchemas, $ref: $expenseRef } = buildJsonSchemas(
   {
@@ -34,6 +56,8 @@ export const { schemas: expenseSchemas, $ref: $expenseRef } = buildJsonSchemas(
     createExpenseSchema,
     expenseUuidParamSchema,
     getAllExpensesSchema,
+    retrieveExpenseResponseSchema,
+    updateExpenseSchema,
   },
   {
     $id: "expense",

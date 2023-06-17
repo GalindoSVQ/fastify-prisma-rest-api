@@ -28,6 +28,16 @@ export async function findUserByUsername(username: string) {
   return user;
 }
 
+export async function findUserByUuid(uuid: string) {
+  const user = await prisma.user.findUnique({
+    where: {
+      uuid,
+    },
+  });
+
+  return user;
+}
+
 export async function findUsers() {
   return await prisma.user.findMany();
 }
