@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Category {
+  FOOD
+  TRANSPORT
+  ENTERTAINMENT
+  HEALTH
+  EDUCATION
+  OTHERS
+}
+
+enum Status {
+  PENDING
+  PARTIALLY_PAID
+  PAID
+}
+
+model User {
+  uuid            String            @id @default(uuid())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  username        String            @unique
+  firstName       String
+  lastName        String?
+  password        String
+  salt            String
+  profile         Profile?
+  group           Group?            @relation(fields: [groupUuid], references: [uuid])
+  groupUuid       String?
+  ExpensesOnUsers ExpensesOnUsers[]
+}
+
+model Profile {
+  uuid     String @id @default(uuid())
+  bio      String
+  user     User   @relation(fields: [userUuid], references: [uuid])
+  userUuid String @unique
+}
+
+model Group {
+  uuid        String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  title       String
+  description String
+  members     User[]
+  authorUuid  String    @unique
+  Expense     Expense[]
+}
+
+model Expense {
+  uuid            String            @id @default(uuid())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  category        Category          @default(OTHERS)
+  title           String
+  description     String
+  date            DateTime
+  amount          Decimal           @db.Decimal(10, 2)
+  status          Status            @default(PENDING)
+  authorUuid      String
+  group           Group             @relation(fields: [groupUuid], references: [uuid])
+  groupUuid       String
+  ExpensesOnUsers ExpensesOnUsers[]
+}
+
+model ExpensesOnUsers {
+  uuid        String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  expense     Expense  @relation(fields: [expenseUuid], references: [uuid])
+  expenseUuid String
+  user        User     @relation(fields: [userUuid], references: [uuid])
+  userUuid    String
+
+  @@unique([expenseUuid, userUuid])
+}
