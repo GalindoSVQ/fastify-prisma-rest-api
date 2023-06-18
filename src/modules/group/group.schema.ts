@@ -39,6 +39,12 @@ const groupResponseSchema = z.object({
       status: z.string(),
       title: z.string(),
       uuid: z.string(),
+      sharedWith: z.array(
+        z.object({
+          uuid: z.string(),
+          username: z.string(),
+        })
+      ),
     })
   ),
 });

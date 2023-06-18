@@ -63,9 +63,51 @@ export async function getGroup(groupUuid: string) {
     },
   });
 
+  const expensesOnUsers = await prisma.expensesOnUsers.findMany({
+    where: {
+      expenseUuid: {
+        in: expenses.map((expense) => expense.uuid),
+      },
+    },
+    select: {
+      expenseUuid: true,
+      userUuid: true,
+      user: {
+        select: {
+          username: true,
+          uuid: true,
+        },
+      },
+    },
+  });
+
+  const expensesOnUsersByExpenseUuid = expensesOnUsers.reduce(
+    (
+      acc: Record<string, { uuid: string; username: string }[]>,
+      expenseOnUser
+    ) => {
+      if (!acc[expenseOnUser.expenseUuid]) {
+        acc[expenseOnUser.expenseUuid] = [];
+      }
+
+      acc[expenseOnUser.expenseUuid].push({
+        uuid: expenseOnUser.userUuid,
+        username: expenseOnUser.user.username,
+      });
+
+      return acc;
+    },
+    {}
+  );
+
+  const expensesShared = expenses.map((expense) => ({
+    ...expense,
+    sharedWith: expensesOnUsersByExpenseUuid[expense.uuid],
+  }));
+
   return {
     ...group,
-    expenses,
+    expenses: expensesShared,
   };
 }
 

@@ -24,6 +24,7 @@ export async function getExpensesFromGroup(groupUuid: string) {
 
   return expenses;
 }
+
 export async function deleteExpense(expenseUuid: string) {
   await prisma.expense.delete({
     where: {
