@@ -32,7 +32,6 @@ export async function createExpensesOnUsersToUserHandler(
 ) {
   const { body } = request;
 
-  console.log(body);
   try {
     const expensesOnUsers = await createExpensesOnUsersToUser(body);
 
